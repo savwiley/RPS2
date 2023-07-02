@@ -8,7 +8,39 @@
 <body>
 
   <script>
-    
+
+    const getComputerChoice = () => {
+      let n = Math.floor(Math.random() * 3);
+      if (n === 0) {
+        return "Rock";
+      } else if (n === 1) {
+        return "Paper";
+      } else {
+        return "Scissors";
+      }
+    }
+
+    const playRound = (playerPick, compPick) => {
+      let player = playerPick.toLowerCase();
+      let comp = compPick.toLowerCase();
+      if (player === comp) {
+        return `It's a tie! You both played ${compPick}!`;
+      } else if (player === "rock" && comp === "scissors" || player === "paper" && comp === "rock" || player === "scissors" && comp === "paper") 
+        {
+        return `You win! ${player[0].toUpperCase() + player.slice(1)} beats ${compPick}!`;
+      } else {
+        return `You lose! ${compPick} beats ${player[0].toUpperCase() + player.slice(1)}!`;
+      }
+    }
+
+    const game = () => {
+      for (let i = 0; i < 5; i++) {
+        console.log(`Round ${i + 1}: ${playRound(prompt("What do you choose?"), getComputerChoice())}`);
+      }
+    }
+
+    game();
+
   </script>
 
 </body>
