@@ -9,6 +9,10 @@
 
   <script>
 
+    /* SCORES */
+    let playerScore = 0;
+    let compScore = 0;
+
     const getComputerChoice = () => {
       let n = Math.floor(Math.random() * 3);
       if (n === 0) {
@@ -27,19 +31,142 @@
         return `It's a tie! You both played ${compPick}!`;
       } else if (player === "rock" && comp === "scissors" || player === "paper" && comp === "rock" || player === "scissors" && comp === "paper") 
         {
+        playerScore++;
         return `You win! ${player[0].toUpperCase() + player.slice(1)} beats ${compPick}!`;
       } else {
+        compScore++;
         return `You lose! ${compPick} beats ${player[0].toUpperCase() + player.slice(1)}!`;
       }
     }
 
-    const game = () => {
-      for (let i = 0; i < 5; i++) {
-        console.log(`Round ${i + 1}: ${playRound(prompt("What do you choose?"), getComputerChoice())}`);
-      }
+    /* DOMS */
+    const body = document.querySelector('body');
+
+    const container = document.createElement('div');
+
+    const rock = document.createElement('div');
+    const paper = document.createElement('div');
+    const scissors = document.createElement('div');
+
+    const results = document.createElement('div');
+
+    const scoreBoard = document.createElement('div');
+    const playerScoreBoard = document.createElement('div');
+    const compScoreBoard = document.createElement('div');
+
+    const restart = document.createElement('button');
+
+    body.appendChild(container);
+    container.appendChild(rock);
+    container.appendChild(paper);
+    container.appendChild(scissors);
+    body.appendChild(scoreBoard);
+    scoreBoard.appendChild(playerScoreBoard);
+    scoreBoard.appendChild(compScoreBoard);
+    body.appendChild(results);
+
+    /* ATTRIBUTES */
+    rock.setAttribute('id', 'rock');
+    rock.setAttribute('class', 'button');
+    rock.innerText = 'ROCK';
+    paper.setAttribute('id', 'paper');
+    paper.setAttribute('class', 'button');
+    paper.innerText = 'PAPER';
+    scissors.setAttribute('id', 'scissors');
+    scissors.setAttribute('class', 'button');
+    scissors.innerText = 'SCISSORS';
+
+    results.setAttribute('id', 'results');
+
+    /* STYLING & EVENTS */
+    body.style.display = "flex";
+    body.style.flexDirection = "column";
+    body.style.justifyContent = "space-between";
+    body.style.margin = "0";
+    body.style.height = "100vh";
+    body.style.textAlign = "center";
+
+    container.style.display = "flex";
+    container.style.justifyContent = "space-around";
+    container.style.justifySelf = "center";
+    container.style.flexGrow = "1";
+
+    scoreBoard.style.display = "flex";
+    scoreBoard.style.justifyContent = "space-between";
+    scoreBoard.style.padding = "10px";
+
+    playerScoreBoard.innerText = `Player: ${playerScore}`;
+    compScoreBoard.innerText = `Computer: ${compScore}`;
+
+    restart.innerText = "Play Again?";
+    restart.style.display = "block";
+    restart.style.margin = "10px auto";
+    restart.style.cursor = "pointer";
+
+    results.style.background = "#f7f7f7";
+    results.style.width = "100vw";
+    results.style.height = "50vh";
+    results.style.borderTop = "1px solid #000";
+    results.style.display = "flex";
+    results.style.flexDirection = "column";
+    results.style.justifyContent = "center";
+    results.style.cursor = "default";
+
+    results.innerText = "waiting...";
+
+    const declareWinner = (winner) => {
+      buttons.forEach(button => {
+        button.removeEventListener('click', playGame);
+        button.style.color = "#bbb";
+        button.style.borderColor = "#bbb";
+        button.style.cursor = "default";
+      });
+      results.style.background = "#333";
+      results.style.color = "#fff";
+      results.innerText = `Game Over!! ${winner} wins!!`;
+      results.appendChild(restart);
     }
 
-    game();
+    const playGame = (e) => {
+      results.innerText =  playRound(e.target.id, getComputerChoice());
+      playerScoreBoard.innerText = `Player: ${playerScore}`;
+      compScoreBoard.innerText = `Computer: ${compScore}`;
+      if (playerScore === 5) {
+        declareWinner("Player");
+      } else if (compScore === 5) {
+        declareWinner("Computer")
+      }
+    };
+
+    const restartGame = () => {
+      playerScore = 0;
+      compScore = 0;
+      playerScoreBoard.innerText = `Player: ${playerScore}`;
+      compScoreBoard.innerText = `Computer: ${compScore}`;
+      buttons.forEach(button => {
+        button.style.borderColor = "#000";
+        button.style.color = "#000";
+        button.style.cursor = "pointer";
+        button.addEventListener('click', playGame)
+      });
+      results.innerText = "waiting...";
+      results.style.background = "#f7f7f7";
+      results.style.color = "#000";
+    }
+
+    restart.addEventListener('click', restartGame);
+
+    const buttons = document.querySelectorAll('.button');
+
+    buttons.forEach(button => {
+      button.style.border = "1px solid #000";
+      button.style.padding = "4px 0";
+      button.style.width = "150px";
+      button.style.background = "#f7f7f7";
+      button.style.cursor = "pointer";
+      button.style.alignSelf = "center";
+      button.addEventListener('click', playGame)
+    });
 
   </script>
 
